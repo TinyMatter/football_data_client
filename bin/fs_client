@@ -9,7 +9,7 @@ require "dotenv"
 Dotenv.load
 
 options = Slop.parse do |o|
-  o.string '-a', '--action', "Which action to perform. list-fixtures, list-seasons"
+  o.string '-a', '--action', "Which action to perform. list-fixtures, list-seasons, list-teams"
   o.string '-l', '--league', "The league, defaults to Premier League (PL)"
   o.string "-y", "--year", "Specifies the relevant season year"
   o.string "-z", "--time-zone", "Specifies the timezone for schedule dates, etc. Default is London"

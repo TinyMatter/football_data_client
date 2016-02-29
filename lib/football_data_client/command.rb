@@ -51,11 +51,33 @@ module FootballDataClient
       end
 
       def pl_fixtures
-        @pl_fixtures ||= client.fetch_fixtures_for_season(pl_season).group_by 
+        @pl_fixtures ||= client.fetch_fixtures_for_season(pl_season)
       end
 
       def fixtures_by_matchday
         @fixtures_by_matchday ||= pl_fixtures.group_by &:matchday
+      end
+    end
+
+    class ListTeamsAction < BaseAction
+      def perform!
+        teams.each do |team|
+          puts "[#{team.code}] (#{team.short_name}) #{team.name}"
+        end
+      end
+
+      private
+
+      def league_code
+        (@options[:league] || "PL").upcase.to_sym
+      end
+
+      def season
+        @season ||= client.fetch_season_for_league(league_code, @options)
+      end
+
+      def teams
+        @teams ||= client.fetch_teams_for_season(season)
       end
     end
 
@@ -79,7 +101,8 @@ module FootballDataClient
     def action_klass
       {
         "list-fixtures" => ListFixturesAction,
-        "list-seasons" => ListSeasonsAction
+        "list-seasons" => ListSeasonsAction,
+        "list-teams" => ListTeamsAction
       }[@options[:action]]
     end
   end

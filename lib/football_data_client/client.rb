@@ -40,6 +40,24 @@ module FootballDataClient
       end
     end
 
+    class Team
+      def self.from_json json={}
+        links = Links.new json["_links"]
+
+        self.new json["code"], json["name"], json["shortName"], json["crestUrl"], links
+      end
+
+      attr_reader :code, :name, :short_name, :crest_url, :links
+
+      def initialize code, name, short_name, crest_url, links
+        @code = code
+        @name = name
+        @short_name = short_name
+        @crest_url = crest_url
+        @links = links
+      end
+    end
+
     class Fixture
       def self.from_json json={}
         links = Links.new json["_links"]
@@ -94,6 +112,14 @@ module FootballDataClient
 
     def initialize key
       @key = key
+    end
+
+    def fetch_teams_for_season season
+      response = connection.get(season.links.teams)
+
+      return [] unless response.success?
+
+      response.body["teams"].map {|json| Models::Team.from_json(json) }
     end
 
     def fetch_season_for_league league_code, options={}
