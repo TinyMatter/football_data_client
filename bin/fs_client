@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "football_data_client"
+require "byebug"
+require "slop"
+require "dotenv"
+
+Dotenv.load
+
+options = Slop.parse do |o|
+  o.string '-a', '--action', "Which action to perform. list-fixtures, list-seasons"
+  o.string '-l', '--league', "The league, defaults to Premier League (PL)"
+  o.string "-y", "--year", "Specifies the relevant season year"
+  o.string "-z", "--time-zone", "Specifies the timezone for schedule dates, etc. Default is London"
+  o.on '--version', 'print the version' do
+    puts FootballDataClient::VERSION
+    exit
+  end
+  o.on '--help', 'print help' do
+    puts o
+    exit
+  end
+end
+
+# Examples:
+
+command = FootballDataClient::Command.new ENV['FOOTBALL_DATA_KEY'], options.to_h
+
+command.perform_action!
