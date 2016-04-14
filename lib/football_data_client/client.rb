@@ -88,17 +88,18 @@ module FootballDataClient
       def self.from_json json={}
         links = Links.new json["_links"]
         
-        self.new(json["id"], json["caption"], json["league"], json["year"], links)
+        self.new(json["id"], json["caption"], json["league"], json["year"], links, json)
       end
 
-      attr_reader :id, :name, :league_code, :year, :links
+      attr_reader :id, :name, :league_code, :year, :links, :attributes
 
-      def initialize id, name, league_code, year, links
+      def initialize id, name, league_code, year, links, attributes
         @id = id
         @name = name
         @league_code = league_code
         @year = year
         @links = links
+        @attributes = attributes
       end
 
       def matches_league? league_code

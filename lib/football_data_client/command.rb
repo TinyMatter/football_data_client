@@ -55,7 +55,7 @@ module FootballDataClient
       end
 
       def fixtures_by_matchday
-        @fixtures_by_matchday ||= pl_fixtures.group_by &:matchday
+        @fixtures_by_matchday ||= pl_fixtures.group_by(&:matchday)
       end
     end
 
